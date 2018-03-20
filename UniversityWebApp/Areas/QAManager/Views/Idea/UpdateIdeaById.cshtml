@@ -1,0 +1,256 @@
+﻿@model UniversityDao.EF.Idea
+
+@{
+    ViewBag.Title = "UpdateIdeaById";
+    Layout = "~/Areas/QAManager/Views/Shared/_Layout.cshtml";
+}
+@ViewBag.IdeaCateName
+asa
+<style>
+    textarea {
+        height: 300px
+    }
+</style>
+<div class="container" style="padding-top:10px">
+    <h4>Updating idea</h4>
+    <hr />
+    <div class="card" style="margin-top:5px">
+        <div class="card-header">
+            <h4>Select place to post</h4>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-2">Select Group:</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("GroupCateIdea", null, "--Please select group--", new { @class = "form-control", @id = "ddlIdeaCateGr" })
+                </div>
+            </div>
+
+            <div class="form-group row " id="divIdeaCate">
+                <label class="col-md-2">Select category:</label>
+                <div class="col-md-10">
+                    <select id="ddlIdeaCate" class="form-control"></select>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card" id="divPostIdea" style="margin-top:5px">
+
+        @using (Html.BeginForm("UpdateIdeaById", "Idea", FormMethod.Post, new { enctype = "multipart/form-data", ideaId = Model.IdeaID }))
+        {
+            <div class="card-body">
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.IdeaID)
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group row">
+                        <label class="col-md-2">Title:</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.IdeaTitle, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IdeaTitle, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2">Content:</label>
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.IdeaContent, new { @class = "form-control", @id = "tarContent" })
+                            @Html.ValidationMessageFor(model => model.IdeaContent, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2">Description:</label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.IdeaDescription, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.IdeaDescription, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2">Post in anonymous:</label>
+                        <div class="col-md-10">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                @Html.CheckBoxFor(model => model.AllowAnonymous, new { @class = "custom-control-input" })
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Enable</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2">Status:</label>
+                        <div class="col-md-10">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                @Html.CheckBoxFor(model => model.IdeaStatus, new { @class = "custom-control-input" })
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Enable</span>
+                            </label>
+                        </div>
+                    </div>
+                    @if (Model.FileSP != null)
+                    {
+                        @Model.FileSP.Substring(Model.FileSP.LastIndexOf('/') + 1)
+                    }
+                    <input type="file" name="file" value="Upload document" id="file" class="btn btn-default">
+                    @Html.HiddenFor(m => m.IdeaCategory, new { @id = "txtIdeaCate" })
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="Post idea" class="btn btn-primary " data-toggle="modal" data-target="#showTerm" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="showTerm">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Do you agree with Greenwich Terms and Conditions?</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div style="overflow-y:scroll;height:400px">
+
+                                1. You must be at least 13 years old to use the Service, and if you are under 18 (in the U.S.) or under the age of majority in your province/territory of residence, your parent or guardian must have read and agreed to these terms before you subscribe.
+
+                                <br /> 2. PETA does not charge for the Service, but your carrier’s standard messaging charges apply. You agree that you are responsible for paying your carrier’s charges to use the Service or, if you are under 18 (in the U.S.) or under the age of majority in your province/territory of residence, that you have permission to use the Service from the adult responsible for paying the carrier’s charges.
+
+                                <br /> 3. PETA reserves the right to change these terms or cancel the Service at any time. Please check these terms on a regular basis for changes. Your continued use of the Service after changes are posted will mean that you accept the terms as modified by the posted changes.
+
+                                <br />  4. Periodic Messaging. The campaign/Service is compatible with most handsets. Supported carriers in the U.S. include ACS Wireless, Alltel (part of Verizon Wireless), Appalachian Wireless, AT&T, Bluegrass Cellular, Boost (iDEN), Boost Unlimited (CDMA), Cellcom, Cellular One from Dobson (part of AT&T), Cellular One of East Central Illinois, Cellular South, Centennial Wireless, Cincinnati Bell, GCI Communications, Illinois Valley Cellular, Immix Wireless, Inland Cellular, Nex-Tech Wireless, Nextel (part of Sprint), nTelos Wireless, Revol Wireless, Sprint, Thumb Cellular, T-Mobile, United Wireless, U.S. Cellular, Verizon Wireless, Virgin Mobile USA, and West Central Wireless.
+
+                                <br /> 5. Multimedia Messaging Service (MMS) alerts: From time to time, PETA may send messages with multimedia content (pictures, videos, GIFs, etc.). MMS alerts may not be available through all carriers. If your device does not support MMS alerts, then you will receive an SMS alert. Prepaid users may not be able to participate. Check with your mobile operator.
+
+                                <br /> 6. To unsubscribe at any time, simply text the word or words “STOP,” “STOP ALL,” “END,” “CANCEL,” “UNSUBSCRIBE,” or “QUIT” to the short code 73822. You can also e-mail support@waterfall.com to unsubscribe. If you require assistance, want additional information, or have questions about this Service, text the word “HELP” to the short code 73822 or e-mail support@waterfall.com.
+
+                                <br /> 7. By subscribing to the Service, you acknowledge that your contact details may be shared with PETA’s international affiliates and that you have read and agree to PETA’s privacy policy. By subscribing to the Service, you also agree that we may text you to request your e-mail address. By providing us with your e-mail address, you are opting in to receive e-mails about our campaigns, events and activities, local volunteer opportunities and alerts, and membership and renewal appeals.
+
+                                <br /> 8. PETA makes no representations or warranties whatsoever regarding the Service. PETA hereby disclaims all warranties, including any implied representations or warranties of merchantability or fitness for a particular purpose.
+
+                                <br />  9. PETA shall not be liable for any direct, indirect, consequential, special, incidental, punitive, or any other damages, even if PETA has been advised of the possibility of such damage or loss, arising or resulting from or in any way relating to your use of the Service.
+
+                                <br />  10. You expressly agree to indemnify, defend, and hold harmless PETA, its directors, officers, employees, servants, agents, representatives, independent contractors, and affiliates from and against any and all claims, damages, liabilities, actions, causes of action, costs, expenses (including reasonable attorneys’ fees), judgments, or penalties of any kind or nature whatsoever arising from your use of the Service.
+
+                                <br />  11. These terms shall be construed in accordance with the laws of the Commonwealth of Virginia, and any arbitration or judicial proceedings to enforce or interpret the terms hereof may be brought only in Norfolk, Virginia.
+                            </div>
+
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Yes, i update</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">No, bring me back</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        }
+        <div id="alert" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                    </div>
+                    <div class="modal-body centertext text-danger">
+                        <h3>You need to input image, doc, excel or pdf file.</h3>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // input file image
+    (function ($) {
+        $.fn.checkFileType = function (options) {
+            var defaults = {
+                allowedExtensions: [],
+                success: function () { },
+                error: function () { }
+            };
+            options = $.extend(defaults, options);
+
+            return this.each(function () {
+
+                $(this).on('change', function () {
+                    var value = $(this).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+
+                    if ($.inArray(extension, options.allowedExtensions) == -1) {
+                        options.error();
+                        $(this).focus();
+                    } else {
+                        options.success();
+                    }
+
+                });
+
+            });
+        };
+
+    })(jQuery);
+    $('#file').checkFileType({
+        allowedExtensions: ['png', 'jpg', 'jpeg', 'docx', 'doc', 'xsl', 'xslt', 'pdf'],
+        success: function () {
+        },
+        error: function () {
+            $("#alert").modal("show")
+            $('#file').val("")
+        }
+    });
+
+
+    $("#ddlIdeaCateGr").change(function () {
+        loadIdeaCategory();
+    })
+    function loadIdeaCategory() {
+        var idCateGr = $("#ddlIdeaCateGr").val()
+        $("#divIdeaCate").css('display', '');
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/QAManager/Idea/GetCateIdeaByJs?grCateId=" + idCateGr,
+            success: function (data) {
+                $('#ddlIdeaCate').html('')
+                var option = '';
+                option += '<option value="0" selected="selected" disabled = "disabled">-- Please select a category --</option>'
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i].IdeaCategoryID)
+                    option += '<option value="' + data[i].IdeaCategoryID + '">' + data[i].CategoryName + '</option>';
+                }
+                $('#ddlIdeaCate').append(option);
+                $("#ddlIdeaCate option[value='@Session["ideaCateId"]']").attr('selected', 'selected')
+            }
+        })
+    }
+    $("#divIdeaCate").change(function () {
+        $("#divPostIdea").css('display', '');
+        var ideaCate = $("#ddlIdeaCate").val()
+        $("#txtIdeaCate").val(ideaCate)
+        console.log(ideaCate)
+    })
+    var editor = CKEDITOR.replace('tarContent');
+    $("#ddlIdeaCateGr option:first").attr('disabled', 'disabled');
+    $("#ddlIdeaCate option:first").attr('disabled', 'disabled');
+
+    $(document).ready(function () {
+        loadIdeaCategory();
+    })
+</script>
+

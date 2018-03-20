@@ -1,0 +1,111 @@
+﻿@model List<UniversityDao.EF.Idea>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/QAManager/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="card" style="border:0">
+        <h4 class="card-header" style="background-color:white">Idea management</h4>
+        <div class="card-body">
+            @*<div class="form-group">
+                <a href="@Url.Action("Create","Idea", new { area ="QAManager"})" class="btn btn-primary"><i class="fa fa-plus"></i> Add new</a>
+            </div>*@
+            <div style="overflow-x:scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:30px">Code</th>
+                            <th style="">Title</th>
+                            <th style="width:200px">Description</th>
+                            <th style="width:200px">Created date</th>
+                            <th style="width:200px">Modified Date</th>
+                            <th style="width:110px">Created By</th>
+                            <th style="width:120px">Modified By</th>
+                            <th style="width:30px">Status</th>
+                            <th style="width:40px">Delete</th>
+                            <th style="width:40px">Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="row_@item.IdeaID">
+                                <td>
+                                    @item.IdeaID
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Index","Idea", new { ideaId =item.IdeaID})">@item.IdeaTitle</a>
+                                </td>
+                                <td>
+                                    @item.IdeaDescription
+                                </td>
+                                <td> @item.CreatedDate</td>
+                                <td> @item.ModifiedDate</td>
+                                <td> @item.CreatedBy</td>
+                                <td> @item.ModifiedBy</td>
+                                <td> @item.IdeaStatus</td>
+                                <td>
+                                    <a class="btn btn-danger btnDelete" data-toggle="modal" data-target="#deleteModal" data-id="@item.IdeaID">
+                                        <i class="fa fa-trash-alt" style="color:white"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning" href="@Url.Action("UpdateIdeaById", "Idea", new { ideaId = item.IdeaID})">
+                                        <i class="fa fa-pencil-alt" style="color:white"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal fade" id="deleteModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Deleting</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Are you sure?
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" id="btnConfirm" class="btn btn-danger" data-dismiss="modal">Confirm</button>
+
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">No !</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).on('click', '.btnDelete', function () {
+        var id = $(this).attr('data-id')
+        $("#btnConfirm").attr('data-id',id)
+    })
+    $(document).on('click', '#btnConfirm', function () {
+        var id = $(this).attr('data-id')
+        $.ajax({
+            method: 'post',
+            url: '@Url.Action("RemoveIdeaById","Idea",new { area ="QAManager"})',
+            data: {ideaId: parseInt(id) },
+            success: function (data) {
+                $("#row_" + id).remove()
+            }
+        })
+    
+      
+    })
+</script>

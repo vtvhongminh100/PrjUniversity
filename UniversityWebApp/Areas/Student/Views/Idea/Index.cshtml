@@ -1,0 +1,34 @@
+﻿@model IEnumerable<UniversityWebApp.Models.IdeaView>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+<div class="container" style="padding-top:15px">
+    <h4>List of @ViewBag.IdeaCateName idea</h4>
+    <hr />
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active">@ViewBag.IdeaCateName</li>
+    </ol>
+    <div class="">
+        <table class="table borderless">
+            <tr style="background-color:#C7CBD6;color:white">
+                <th>TITLE</th>
+                <th style="width:200px">Views</th>
+                <th style="width:200px">Comments</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><a href="@Url.Action("GetDtIdById", new { id =item.IdeaID})">@item.IdeaTitle</a></td>
+                    <td>
+                        <p>@item.IdeaViewCount</p>
+                    </td>
+                    <td>@item.CommentCount</td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

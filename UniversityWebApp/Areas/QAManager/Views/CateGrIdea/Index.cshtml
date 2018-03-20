@@ -1,0 +1,116 @@
+﻿@model List<UniversityDao.EF.CategoryGroupIdea>
+
+@{
+    Layout = "~/Areas/QAManager/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="card" style="border:0">
+        <h4 class="card-header" style="background-color:white">Group category managerment</h4>
+
+        <div class="card-body">
+            <div class="form-group" style="">
+                <a href="@Url.Action("Create","CateGrIdea", new { area = "QAManager"})" class="btn btn-primary"><i class="fa fa-plus"></i> Add new</a>
+            </div>
+            <div style="overflow-x:scroll">
+
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width:30px">Code</th>
+                            <th style="">Name</th>
+                            <th style="width:200px">Description</th>
+                            <th style="width:200px">Created date</th>
+                            <th style="width:200px">Modified Date</th>
+                            <th style="width:110px">Created By</th>
+                            <th style="width:120px">Modified By</th>
+                            <th style="width:30px">Status</th>
+                            <th style="width:40px">Delete</th>
+                            <th style="width:40px">Edit</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="row_@item.CategoryGroupIdeaID" >
+                                <td>
+                                    @item.CategoryGroupIdeaID
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Index","IdeaCategory",new {ID = item.CategoryGroupIdeaID })"> @item.CategoryGroupName</a>
+                                </td>
+                                <td>
+                                    @item.CateGrIdeaDes
+
+                                <td>
+                                    @item.CreatedDate
+                                </td>
+                                <td>
+                                    @item.ModifiedDate
+                                <td>
+                                    @item.CreatedBy
+                                </td>
+                                <td>
+                                    @item.ModifiedBy
+                                </td>
+                                <td>
+                                    @item.CategoryGrIdeaSt
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger btnDelete" data-toggle="modal" data-target="#deleteModal" data-id="@item.CategoryGroupIdeaID">
+                                        <i class="fa fa-trash-alt" style="color:white"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning" href="@Url.Action("Update","CateGrIdea", new { ID = item.CategoryGroupIdeaID})">
+                                        <i class="fa fa-pencil-alt" style="color:white"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal fade" id="deleteModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Deleting</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Are you sure?
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" id="btnConfirm" class="btn btn-danger" data-dismiss="modal">Confirm</button>
+
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- The Modal -->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).on('click', '.btnDelete', function () {
+        var ID = $(this).attr('data-id')
+        $("#btnConfirm").attr('data-id', ID)
+    })
+    $(document).on('click', '#btnConfirm', function () {
+        var ID = $(this).attr('data-id')
+        $.post('/QAManager/CateGrIdea/Delete/' + parseInt(ID))
+        $("#row_" + ID).remove()
+        console.log(ID)
+    })
+</script>

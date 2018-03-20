@@ -1,0 +1,58 @@
+﻿<!DOCTYPE HTML>
+
+<html>
+<head>
+
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/CustomStyle/bootstrap-4.0.0-dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/CustomStyle/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
+    <link href="~/CustomStyle/Css/Home/one-page-wonder.min.css" rel="stylesheet" />
+    <link href="~/CustomStyle/fontawsome/web-fonts-with-css/css/fontawesome-all.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/CustomStyle/Css/Home/_Layout.css" rel="stylesheet" />
+    <script src="~/CustomStyle/ckeditor/ckeditor.js"></script>
+    <style>
+        body {
+            position: relative;
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+    @{
+        var session = (ModelPr.ModelViews.UserLogin)Session[ModelPr.CommonClass.CommonCls.User_session];
+    }
+    <!-- Navigation -->
+    <div class="" id="mainmenu">
+        <nav class="navbar navbar-expand-md navbar-dark navbar-custom mainnav">
+            <div class="container">
+                <a class="navbar-brand" href="@Url.Action("Index","Home", new { area =""})">FPT Greenwich University Forum</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Hello: @session.Username</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Logout","Account", new { area =""})">Log out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+    <div>
+
+    </div>
+</body>
+
+</html>
+
+

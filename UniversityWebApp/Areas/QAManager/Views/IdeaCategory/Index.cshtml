@@ -1,0 +1,116 @@
+﻿@model List<ModelPr.ModelViews.IdeaCategoryView>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/QAManager/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="card" style="border:0">
+        <h4 class="card-header" style="background-color:white">Idea category management</h4>
+        <div class="card-body">
+            <div class="form-group">
+                <a href="@Url.Action("Create","IdeaCategory", new { area ="QAManager"})" class="btn btn-primary"><i class="fa fa-plus"></i> Add new</a>
+            </div>
+            <div style="overflow-x:scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:30px">Code</th>
+                            <th style="">Name</th>
+                            <th style="width:200px">Description</th>
+                            <th style="width:200px">Created date</th>
+                            <th style="width:200px">Modified Date</th>
+                            <th style="width:110px">Created By</th>
+                            <th style="width:120px">Modified By</th>
+                            <th style="width:120px">Final Date</th>
+                            <th style="width:30px">Status</th>
+                            <th style="width:40px">Delete</th>
+                            <th style="width:40px">Edit</th>
+                            <th style="width:40px">File Support</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="row_@item.IdeaCategoryID">
+                                <td>
+                                    @item.IdeaCategoryID
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Index","Idea", new { idCateId =item.IdeaCategoryID})">@item.CategoryName</a>
+                                </td>
+                                <td>
+                                    @item.CategoryDescription
+                                </td>
+                                <td> @item.CreatedDate</td>
+                                <td> @item.ModifiedDate</td>
+                                <td> @item.CreatedBy</td>
+                                <td> @item.ModifiedBy</td>
+                                <td> @item.FinalCloseDate</td>
+                                <td> @item.IdeaCateStatus</td>
+                                <td>
+                                    <a class="btn btn-danger btnDelete" data-toggle="modal" data-target="#deleteModal" data-id="@item.IdeaCategoryID">
+                                        <i class="fa fa-trash-alt" style="color:white"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning" href="@Url.Action("Update", "IdeaCategory", new { id = item.IdeaCategoryID, grID = item.GroupCateIdea })">
+                                        <i class="fa fa-pencil-alt" style="color:white"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    @if (item.FinalCloseDate <= DateTime.Now)
+                                    {
+                                        <a class="btn btn-primary" href="@Url.Action("DownloadZipFile",new { ideaCateId = item.IdeaCategoryID*777})">Download</a>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary" disabled >Not yet</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal fade" id="deleteModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Deleting</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Are you sure?
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" id="btnConfirm" class="btn btn-danger" data-dismiss="modal">Confirm</button>
+
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">No !</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).on('click', '.btnDelete', function () {
+        var id = $(this).attr('data-id')
+        $("#btnConfirm").attr('data-id', id)
+    })
+    $(document).on('click', '#btnConfirm', function () {
+        var id = $(this).attr('data-id')
+        $.post('../Delete/' + parseInt(id))
+        $("#row_" + id).remove()
+    })
+</script>

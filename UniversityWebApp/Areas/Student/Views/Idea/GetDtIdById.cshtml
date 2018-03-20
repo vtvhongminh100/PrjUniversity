@@ -1,0 +1,295 @@
+﻿@model UniversityDao.EF.Comment
+
+@{
+    ViewBag.Title = "GetDtIdById";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+    var viewIdea = ViewBag.ViewIdea;
+    var viewUser = ViewBag.ShowUserPostIdea;
+    var session = (ModelPr.ModelViews.UserLogin)Session[ModelPr.CommonClass.CommonCls.User_session];
+    var viewAllComment = ViewBag.ViewAllComment;
+}
+<style>
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
+<div class="container" style="padding-top:15px">
+
+    <hr />
+    <div class="card">
+
+        <div class="card-header">
+            <h4>@viewIdea.IdeaTitle</h4>
+        </div>
+        <div class="card-body">
+            @Html.Raw(viewIdea.IdeaContent)
+        </div>
+        <div class="card-footer">
+            <div class="" style="text-align:right">
+                @if (@viewIdea.AllowAnonymous == true)
+                {
+
+                    <p style="text-align:left">Posted by: Anonymous,@viewIdea.CreatedDate </p>
+                } 
+                else
+                {
+                    <p style="text-align:left">Posted by: @viewUser.Username,@viewIdea.CreatedDate </p>
+                }
+                <a class="btn btn-primary btnTU" style="margin:5px 0 5px 0"><i class="fa fa-thumbs-up" style="color:white"> Thumbs-up <i class="viewTU"></i></i></a>
+
+                <a class="btn btn-primary btnTD" style="margin:5px 0 5px 0"><i class="fa fa-thumbs-down" style="color:white"> Thumbs-down <i class="viewTD"></i></i></a>
+
+                @if (viewIdea.FileSP != null)
+                {
+                    @*<a class="btn btn-warning" style="word-wrap:break-word;white-space:normal!important" href="/dl/@Convert.ToInt32(viewIdea.IdeaID*77)"><i class="fa fa-file" style="color:white"> Download support file : @ViewBag.FileNameSP<i class=""></i></i></a>*@
+                    <a class="btn btn-warning" style="word-wrap:break-word;white-space:normal!important" href="@Url.Action("DownloadFile","Idea",new { ideaId = viewIdea.IdeaID*777 })"><i class="fa fa-file" style="color:white"> Download support file : @ViewBag.FileNameSP<i class=""></i></i></a>
+
+                }
+
+            </div>
+
+        </div>
+    </div>
+    @if (viewAllComment != null)
+    {
+        foreach (var item in viewAllComment)
+        {
+            <hr />
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>User: @item.CreatedBy</h6>
+                    </div>
+
+                    <div class="card-body">
+                        @Html.Raw(item.CmContent)
+                    </div>
+                </div>
+            </div>
+        }
+
+    }
+
+    <hr />
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h6>Your user: @session.Username</h6>
+            </div>
+            @using (Html.BeginForm("InsertComment", "Comment", new { ideaId = @viewIdea.IdeaID }, FormMethod.Post))
+            {
+                <div class="card-body">
+                    @Html.TextAreaFor(model => model.CmContent, new { @id = "tarCmContent" })
+                </div>
+                <div class="card-footer">
+                    <input value="Comment" type="submit" class="btn btn-primary" id="btnComment" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+        var idea = {
+            init: function () {
+                idea.regEvents();
+            },
+            regEvents: function () {
+                $(".btnTU").click(function () {
+                $.ajax({
+                    type: 'post',
+                    contentType: 'application/json',
+                    url: '/Student/Idea/ThumbsUp?ideaId=' + @viewIdea.IdeaID,
+                    success: function (data) {
+                        GetThumbsUp();
+                        GetThumbsDown();
+                    }
+                })
+            });
+                $(".btnTD").click(function () {
+                $.ajax({
+                    type: 'post',
+                    contentType: 'application/json',
+                    url: '/Student/Idea/ThumbsDown?ideaId=' + @viewIdea.IdeaID,
+                    success: function (data) {
+                        GetThumbsDown();
+                        GetThumbsUp();
+                    }
+                })
+                });
+                function GetThumbsUp() {
+                GetExistTU();
+                  $.ajax({
+                    type: 'post',
+                    contentType: 'application/json',
+                    url: '/Student/Idea/GetThumbsUpCountUC?ideaId=' + @viewIdea.IdeaID,
+                    success: function (data) {
+                        $(".viewTU").html('')
+                        $(".viewTU").html(data)
+                    }
+                })
+            };
+            function GetThumbsDown() {
+                GetExistTD();
+                  $.ajax({
+                    type: 'post',
+                    contentType: 'application/json',
+                    url: '/Student/Idea/GetThumbsDownCountUC?ideaId=' + @viewIdea.IdeaID,
+                    success: function (data) {
+                        $(".viewTD").html('')
+                        $(".viewTD").html(data)
+                    }
+                })
+            };
+            function GetExistTU() {
+                  $.ajax({
+                    type: 'post',
+                    contentType: 'application/json',
+                    url: '/Student/Idea/CheckExistTU?ideaId=' + @viewIdea.IdeaID,
+                    success: function (data) {
+                        console.log(data)
+                        if (parseInt(data) === 1) {
+                            $(".btnTU").removeClass('btn-primary').addClass('btn-danger')
+                        } else {
+                            $(".btnTU").removeClass('btn-danger').addClass('btn-primary')
+                        }
+
+                    }
+                })
+            };
+            function GetExistTD() {
+                  $.ajax({
+                    type: 'post',
+                    contentType: 'application/json',
+                    url: '/Student/Idea/CheckExistTD?ideaId=' + @viewIdea.IdeaID,
+                    success: function (data) {
+                        console.log(data)
+                        if (parseInt(data) === 1) {
+                            $(".btnTD").removeClass('btn-primary').addClass('btn-danger')
+                        } else {
+                            $(".btnTD").removeClass('btn-danger').addClass('btn-primary')
+                        }
+
+                    }
+                })
+            };
+            function GetAllComment() {
+                 $.ajax({
+                    type: 'post',
+                    contentType: 'application/json',
+                    url: '/Student/Idea/GetCmByIdeaId?ideaId=' + @viewIdea.IdeaID,
+                    success: function (data) {
+
+                    }
+                })
+            }
+            $(document).ready(function () {
+                GetAllComment();
+                GetExistTD();
+                GetExistTU();
+                GetThumbsDown();
+                GetThumbsUp();
+
+                var editor = CKEDITOR.replace('tarCmContent');
+
+
+            });
+
+            }
+
+
+        }
+        idea.init();
+
+</script>
+
+@*<script type="text/javascript">
+                $(".btnTU").click(function () {
+                    $.ajax({
+                        type: 'post',
+                        contentType: 'application/json',
+                        url: '/Student/Idea/ThumbsUp?ideaId=' + @viewIdea.IdeaID,
+                        success: function (data) {
+                            GetThumbsUp();
+                            GetThumbsDown();
+                        }
+                    })
+                });
+                $(".btnTD").click(function () {
+                    $.ajax({
+                        type: 'post',
+                        contentType: 'application/json',
+                        url: '/Student/Idea/ThumbsDown?ideaId=' + @viewIdea.IdeaID,
+                        success: function (data) {
+                            GetThumbsDown();
+                            GetThumbsUp();
+                        }
+                    })
+                });
+                function GetThumbsUp() {
+                    GetExistTU();
+                      $.ajax({
+                        type: 'post',
+                        contentType: 'application/json',
+                        url: '/Student/Idea/GetThumbsUpCountUC?ideaId=' + @viewIdea.IdeaID,
+                        success: function (data) {
+                            $(".viewTU").html('')
+                            $(".viewTU").html(data)
+                        }
+                    })
+                };
+                function GetThumbsDown() {
+                    GetExistTD();
+                      $.ajax({
+                        type: 'post',
+                        contentType: 'application/json',
+                        url: '/Student/Idea/GetThumbsDownCountUC?ideaId=' + @viewIdea.IdeaID,
+                        success: function (data) {
+                            $(".viewTD").html('')
+                            $(".viewTD").html(data)
+                        }
+                    })
+                };
+                function GetExistTU() {
+                      $.ajax({
+                        type: 'post',
+                        contentType: 'application/json',
+                        url: '/Student/Idea/CheckExistTU?ideaId=' + @viewIdea.IdeaID,
+                        success: function (data) {
+                            console.log(data)
+                            if (parseInt(data) === 1) {
+                                $(".btnTU").removeClass('btn-primary').addClass('btn-danger')
+                            } else {
+                                $(".btnTU").removeClass('btn-danger').addClass('btn-primary')
+                            }
+
+                        }
+                    })
+                };
+                function GetExistTD() {
+                      $.ajax({
+                        type: 'post',
+                        contentType: 'application/json',
+                        url: '/Student/Idea/CheckExistTD?ideaId=' + @viewIdea.IdeaID,
+                        success: function (data) {
+                            console.log(data)
+                            if (parseInt(data) === 1) {
+                                $(".btnTD").removeClass('btn-primary').addClass('btn-danger')
+                            } else {
+                                $(".btnTD").removeClass('btn-danger').addClass('btn-primary')
+                            }
+
+                        }
+                    })
+                };
+                $(document).ready(function () {
+                    GetExistTD();
+                    GetExistTU();
+                    GetThumbsDown();
+                    GetThumbsUp();
+                });
+
+
+
+    </script>*@
