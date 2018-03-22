@@ -46,6 +46,7 @@
     <Compile Include="ModelViews\CategoryGroupIdeaView.cs" />
     <Compile Include="ModelViews\FileModel.cs" />
     <Compile Include="ModelViews\IdeaCategoryView.cs" />
+    <Compile Include="ModelViews\ProfileModel.cs" />
     <Compile Include="ModelViews\UserLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

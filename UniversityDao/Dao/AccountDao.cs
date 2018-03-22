@@ -1,6 +1,7 @@
 ﻿using ModelPr.ModelViews;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -119,6 +120,29 @@ namespace UniversityDao.Dao
             }
             catch
             {
+
+            }
+            return false;
+        }
+
+        public bool UploadImage(int id, String file) {
+            try {
+                var item = db.Accounts.Find(id);
+                item.Image = file;
+                db.SaveChanges();
+                return true;
+            } catch {
+
+            }
+            return false;
+        }
+
+        public bool UpdatePassword(Account account) {
+            try {
+                db.Entry(account).State = EntityState.Modified;
+                db.SaveChanges();
+                return true;
+            } catch {
 
             }
             return false;
