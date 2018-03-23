@@ -23,6 +23,17 @@ namespace UniversityDao.Dao
             Account account = db.Accounts.Find(id);
             return account; 
         }
+        public Account GetUserByEmail(string email)
+        {
+            Account account = db.Accounts.SingleOrDefault(x => x.Email.Equals(email));
+            return account;
+        }
+
+        public Account GetUserByToken(string token)
+        {
+            Account account = db.Accounts.SingleOrDefault(x => x.Token.Equals(token));
+            return account;
+        }
         public Account GetUserByIdeaId(int ideaId)
         {
             Account account = (from a in db.Accounts join b in db.Ideas
@@ -43,7 +54,7 @@ namespace UniversityDao.Dao
             return db.Accounts.ToList();  
         }
 
-        public int LoginCheck(AccountModel account)
+        public int LoginCheck(UserLogin account)
         {
             int status = 0;
             var result = db.Accounts.SingleOrDefault(x => x.Username == account.Username);
@@ -147,5 +158,54 @@ namespace UniversityDao.Dao
             }
             return false;
         }
+
+        public Account Registry(AccountModel model)
+        {
+            Account account = new Account();
+            account.Password = model.Password;
+            account.Username = model.Username;
+            account.Email = model.Email;
+            account.Token = Guid.NewGuid().ToString();
+            account.FullName = model.FullName;
+            account.Address = model.Address;
+            account.Phone = model.Phone;
+            account.Status = true;
+            account.Role = "STU";
+            account.EmailConfirmed = false;
+            db.Accounts.Add(account);
+            db.SaveChanges();
+            return account;
+        }
+
+        public bool UpdateEmailConfirmed(string Token)
+        {
+            try
+            {
+                Account account = db.Accounts.SingleOrDefault(x => x.Token == Token);
+                account.EmailConfirmed = true;
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool ResetPassword(ResetPassword rp)
+        {
+            try
+            {
+                Account account = db.Accounts.SingleOrDefault(x => x.Email == rp.Email);
+                account.Password = rp.Password;
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }
