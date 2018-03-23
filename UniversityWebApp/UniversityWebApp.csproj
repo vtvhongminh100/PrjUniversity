@@ -167,6 +167,7 @@
     <Compile Include="Areas\QAManager\Controllers\IdeaCategoryController.cs" />
     <Compile Include="Areas\QAManager\Controllers\CateGrIdeaController.cs" />
     <Compile Include="Areas\QAManager\Controllers\IdeaController.cs" />
+    <Compile Include="Areas\QAManager\Controllers\UserController.cs" />
     <Compile Include="Areas\QAManager\QAManagerAreaRegistration.cs" />
     <Compile Include="Areas\Student\Controllers\BaseController.cs" />
     <Compile Include="Areas\Student\Controllers\CommentController.cs" />
@@ -1607,6 +1608,11 @@
     <Content Include="Areas\Student\Views\Idea\GetDtIdById.cshtml" />
     <Content Include="Areas\QAManager\Views\Idea\Index.cshtml" />
     <Content Include="Areas\QAManager\Views\Idea\UpdateIdeaById.cshtml" />
+    <Content Include="Areas\QAManager\Views\User\Index.cshtml" />
+    <Content Include="Areas\QAManager\Views\User\Create.cshtml" />
+    <Content Include="Areas\QAManager\Views\User\Edit.cshtml" />
+    <Content Include="Areas\QAManager\Views\User\Delete.cshtml" />
+    <Content Include="Areas\QAManager\Views\User\Details.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

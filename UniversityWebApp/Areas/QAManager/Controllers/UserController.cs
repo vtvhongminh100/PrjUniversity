@@ -24,7 +24,7 @@ namespace UniversityWebApp.Areas.QAManager.Controllers
         public ActionResult Details(int id)
         {
             var result = new AccountDao().GetUserByID(id);
-            return View();
+            return View(result);
         }
 
         // GET: QAManager/User/Create
@@ -52,7 +52,8 @@ namespace UniversityWebApp.Areas.QAManager.Controllers
         // GET: QAManager/User/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var result = new AccountDao().GetUserByID(id);
+            return View(result);
         }
 
         // POST: QAManager/User/Edit/5
@@ -73,7 +74,8 @@ namespace UniversityWebApp.Areas.QAManager.Controllers
         // GET: QAManager/User/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var result = new AccountDao().GetUserByID(id);
+            return View(result);
         }
 
         // POST: QAManager/User/Delete/5

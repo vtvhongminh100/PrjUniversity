@@ -34,7 +34,13 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto"> 
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index","CateGrIdea", new { area ="QAManager"})">CateGrIdea</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index","User", new { area ="QAManager"})">Users</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Hello: @session.Username</a>
                         </li>
