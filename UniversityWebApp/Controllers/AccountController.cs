@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using UniversityDao.Dao;
+using UniversityDao.EF;
+using System.Net.Mail;
+using System.Configuration;
 
 namespace UniversityWebApp.Controllers
 {
@@ -33,7 +36,7 @@ namespace UniversityWebApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(AccountModel model)
+        public ActionResult Login(UserLogin model)
         {
             Session.Clear();
             if (ModelState.IsValid)
@@ -150,5 +153,162 @@ namespace UniversityWebApp.Controllers
             }
             return View("Profile", profile);
         }
+        public ActionResult Registry()
+        {
+            return View("Registry");
+        }
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Registration(AccountModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                AccountDao dao = new AccountDao();
+                if (dao.GetUserByUserName(model.Username) != null)
+                {
+                    ModelState.AddModelError("", "This account is existing !!!");
+                }
+                else
+                {
+                    if (dao.GetUserByEmail(model.Email) != null)
+                    {
+                        ModelState.AddModelError("", "This email is existing !!!");
+                    }
+                    else
+                    {
+                        Account acc = dao.Registry(model);
+                        if (acc != null)
+                        {
+                            MailMessage m = new MailMessage(
+                            new MailAddress(ConfigurationManager.AppSettings["mailAccount"], "FPT Greenwich University Forum"),
+                            new MailAddress(model.Email));
+                            m.Subject = "Email confirmation";
+                            m.Body = string.Format("Dear {0}<BR/>Thank you for your registration, please click on the below link to complete your registration:<BR/> <a href=\"{1}\" title=\"User Email Confirm\">Verify now</a>", model.Username, Url.Action("ConfirmEmail", "Account", new { Token = acc.Token }, Request.Url.Scheme));
+                            m.IsBodyHtml = true;
+                            SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                            smtp.Credentials = new NetworkCredential(
+                                ConfigurationManager.AppSettings["mailAccount"],
+                                ConfigurationManager.AppSettings["mailPassword"]
+                                );
+                            smtp.EnableSsl = true;
+                            smtp.Send(m);
+                            return RedirectToAction("Confirm", "Account", new { Email = model.Email });
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "The account did not create");
+                        }
+                    }
+                }
+
+            }
+            return View("Registry");
+        }
+        [AllowAnonymous]
+        public ActionResult Confirm(string Email)
+        {
+            ViewBag.Email = Email;
+            return View();
+        }
+        // GET: /Account/ConfirmEmail
+        [AllowAnonymous]
+        public ActionResult ConfirmEmail(string Token)
+        {
+            AccountDao dao = new AccountDao();
+            bool x = dao.UpdateEmailConfirmed(Token);
+            if (x == true)
+            {
+                return View("Thanks");
+            }
+            else
+            {
+                return View("Error");
+            }
+        }
+        public ActionResult ResetPass()
+        {
+            return View("ResetPassword");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResetPass(ResetPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.Email == null)
+                {
+                    ModelState.AddModelError("", "The Email field is required.");
+                }
+                else
+                {
+                    AccountDao dao = new AccountDao();
+                    Account account = dao.GetUserByEmail(model.Email);
+
+                    if (account == null)
+                    {
+                        ModelState.AddModelError("", "This email is not existing !!!");
+                    }
+                    else
+                    {
+                        MailMessage m = new MailMessage(
+                        new MailAddress(ConfigurationManager.AppSettings["mailAccount"], "FPT Greenwich University Forum"),
+                        new MailAddress(model.Email));
+                        m.Subject = "Reset Password";
+                        m.Body = string.Format("Dear {0}<BR/>Please reset your password by clicking here: <a href=\"{1}\" title=\"Reset Password\">link</a>", account.Username, Url.Action("ChangePassword", "Account", new { Token = account.Token }, Request.Url.Scheme));
+                        m.IsBodyHtml = true;
+                        SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                        smtp.Credentials = new NetworkCredential(
+                            ConfigurationManager.AppSettings["mailAccount"],
+                            ConfigurationManager.AppSettings["mailPassword"]
+                            );
+                        smtp.EnableSsl = true;
+                        smtp.Send(m);
+                        return RedirectToAction("Confirm", "Account", new { Email = model.Email });
+                    }
+                }
+            }
+            return View("ResetPassword");
+        }
+        public ActionResult ChangePassword(string Token)
+        {
+            AccountDao dao = new AccountDao();
+            Account account = dao.GetUserByToken(Token);
+            ResetPassword rp = new ResetPassword();
+            rp.Email = account.Email;
+            return View("ChangePassword", rp);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(ResetPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.Password == null)
+                {
+                    ModelState.AddModelError("", "The Password field is required.");
+                }
+                else if (model.ConfirmPassword == null)
+                {
+                    ModelState.AddModelError("", "The Confirm Password field is required.");
+                }
+                else
+                {
+                    AccountDao dao = new AccountDao();
+                    bool x = dao.ResetPassword(model);
+                    if (x == true)
+                    {
+                        return View("Thanks");
+                    }
+                    else
+                    {
+                        return View("Error");
+                    }
+                }
+            }
+            return View("ChangePassword");
+        }
+
     }
 }
