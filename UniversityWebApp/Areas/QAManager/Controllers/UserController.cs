@@ -84,7 +84,7 @@ namespace UniversityWebApp.Areas.QAManager.Controllers
         {
             try
             {
-                new AccountDao().EditAccount(model);
+                new AccountDao().DeleteAccount(model);
 
                 return RedirectToAction("Index");
             }
