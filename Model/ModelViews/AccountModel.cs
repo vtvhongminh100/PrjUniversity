@@ -14,22 +14,8 @@ namespace ModelPr.ModelViews
     {
         [Key]
         public int UserID { get; set; }
-        [Required]
-        [StringLength(30,ErrorMessage = "Username contains only 20 characters.")]
-        [DisplayName("Username")]
-
         public string Username { get; set; }
-        [Required]
-        [StringLength(30, ErrorMessage = "Password contains only 20 characters.")]
-        [DisplayName("Password")]
         public string Password { get; set; }
-
-        [Required]
-        [NotMapped]
-        [Compare("Password")]
-        [StringLength(200)]
-        public string ConfirmPassword { get; set; }
-
         [Required]
         [StringLength(200)]
         public string FullName { get; set; }

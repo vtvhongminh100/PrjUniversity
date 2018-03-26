@@ -207,5 +207,14 @@ namespace UniversityDao.Dao
             }
         }
 
+        public int GetNextStudentID() {
+            try {
+                int id = db.Accounts.Where(t => t.Role == "STU").Count();
+                return id;
+            } catch (Exception) {
+                throw;
+            }
+        }
+
     }
 }

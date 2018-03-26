@@ -29,21 +29,6 @@
                     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                 </div>
                 <div class="input-group input-group-lg" style="margin-bottom:20px">
-                    <span class="input-group-addon" id="sizing-addon1"><span class="fa fa-user"></span></span>
-                    @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @placeholder = "Username" })
-                </div>
-
-                <div class="input-group input-group-lg" style="margin-bottom:20px">
-                    <span class="input-group-addon" id="sizing-addon1"><span class="fa fa-lock"></span></span>
-                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "Password" })
-                </div>
-
-                <div class="input-group input-group-lg" style="margin-bottom:20px">
-                    <span class="input-group-addon" id="sizing-addon1"><span class="fa fa-lock"></span></span>
-                    @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control", @placeholder = "Confirm Password" })
-                </div>
-
-                <div class="input-group input-group-lg" style="margin-bottom:20px">
                     <span class="input-group-addon" id="sizing-addon1"><span class="fa fa-address-card"></span></span>
                     @Html.TextBoxFor(model => model.FullName, new { @class = "form-control", @placeholder = "Full Name" })
                 </div>
