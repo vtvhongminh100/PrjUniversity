@@ -23,7 +23,7 @@ namespace UniversityWebApp.Areas.Student.Controllers
             else if (session != null)
             {
                 var userRole = db.Accounts.Find(session.UserID).Role;
-                if (!userRole.Equals("STU"))
+                if (!userRole.Equals("STU") && !userRole.Equals("STAFF"))
                 {
                     filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { Controller = "Account", action = "Index", Area = "" }));
                 }

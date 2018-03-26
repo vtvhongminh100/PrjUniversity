@@ -1,23 +1,24 @@
-﻿@model IEnumerable<UniversityWebApp.Models.IdeaView>
-
+﻿
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
-    Session["IdeaCateName"] = ViewBag.IdeaCateName;
-    Session["Url"] = HttpContext.Current.Request.Url;
+    ViewBag.Title = "GetNewPost";
+    Layout = "~/Areas/QAManager/Views/Shared/_Layout.cshtml";
 }
 
+@model IEnumerable<UniversityWebApp.Models.IdeaView>
+
+
+
 <div class="container" style="padding-top:15px">
-    <h4>List of @ViewBag.IdeaCateName idea</h4>
     <hr />
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active">@ViewBag.IdeaCateName</li>
+        <li class="breadcrumb-item active">New post</li>
     </ol>
     <div class="">
         <table class="table borderless">
             <tr style="background-color:#C7CBD6;color:white">
                 <th>TITLE</th>
+              
                 <th style="width:200px">Views</th>
                 <th style="width:200px">Comments</th>
             </tr>
@@ -25,7 +26,7 @@
             {
                 <tr>
                     <td>
-                        <a href="@Url.Action("GetDtIdById", new { id =item.IdeaID,@class="link"})">@item.IdeaTitle</a>
+                        <a href="@Url.Action("UpdateIdeaById","Idea", new { ideaId =item.IdeaID, area= "QAManager",@class="link"})">@item.IdeaTitle</a>
                         <p>@item.CreatedDate <span>,by <a href="">@item.CreatedBy</a></span></p>
                     </td>
                     <td>
@@ -38,3 +39,6 @@
         </table>
     </div>
 </div>
+
+
+

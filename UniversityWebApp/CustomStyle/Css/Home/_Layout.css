@@ -1,4 +1,7 @@
 ﻿.mainnav {
     background-color: #034EA2;
-    opacity: 0.8
+}
+.link:visited {
+    color: gray;
+    text-decoration: none;
 }

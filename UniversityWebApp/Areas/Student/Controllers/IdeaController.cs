@@ -3,8 +3,11 @@ using Model.ModelViews;
 using ModelPr.ModelViews;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.SessionState;
@@ -27,13 +30,15 @@ namespace UniversityWebApp.Areas.Student.Controllers
                 IdeaID = x.IdeaID,
                 IdeaTitle = x.IdeaTitle,
                 IdeaViewCount = x.IdeaViewCount,
-                CommentCount = (int)GetCountComment(x.IdeaID)
+                CommentCount = (int)GetCountComment(x.IdeaID),
+                CreatedDate = x.CreatedDate,
+                CreatedBy = x.CreatedBy
             });
-            
+
             GetNameIdeaCate(ideaCateId);
             return View(result);
         }
-        
+
         public int GetCountComment(int ideaId)
         {
             var vc = new CommentDao().GetCmByIdeaId(ideaId).Count;
@@ -44,16 +49,12 @@ namespace UniversityWebApp.Areas.Student.Controllers
         {
             new IdeaDao().InsertViewCount(ideaId);
         }
-        public void GetCmByIdeaId(int ideaId)
-        {
-            var rs = new CommentDao().GetCmByIdeaId(ideaId);
-            ViewBag.ViewAllComment = rs;
-        }
+
         public void GetUserByideaId(int ideaId)
         {
             var rs = new AccountDao().GetUserByIdeaId(ideaId);
             ViewBag.ShowUserPostIdea = rs;
-            GetCmByIdeaId(ideaId);
+            CheckShowCmByRole(ideaId);
         }
         [HttpGet]
         public ActionResult PostIdea()
@@ -68,8 +69,7 @@ namespace UniversityWebApp.Areas.Student.Controllers
         }
         public void GetNameIdeaCate(int ideaCateId)
         {
-            ViewBag.IdeaCateName = new IdeaDao().GetNameIdeaCate(ideaCateId);
-
+            ViewBag.IdeaCateName = new IdeaDao().GetIdeaCateById(ideaCateId).CategoryName.ToString();
         }
         public void ThumbsUp(int ideaId)
         {
@@ -137,7 +137,7 @@ namespace UniversityWebApp.Areas.Student.Controllers
         [HttpGet]
         public FileContentResult DownloadFile(int ideaId)
         {
-          
+
             string path = new IdeaDao().GetFileSP(ideaId / 777);
             string fileName = path.Substring(path.LastIndexOf('/') + 1);
             if (((UserLogin)(Session[ModelPr.CommonClass.CommonCls.User_session])).UserID != 0)
@@ -151,7 +151,7 @@ namespace UniversityWebApp.Areas.Student.Controllers
                 return null;
             }
         }
-      
+        // MINH / ADD  NEW IDEA / STU
         [HttpPost]
         public ActionResult PostIdea(Idea model, HttpPostedFileBase file)
         {
@@ -167,9 +167,57 @@ namespace UniversityWebApp.Areas.Student.Controllers
 
             }
             model.CreatedBy = ((UserLogin)(Session[ModelPr.CommonClass.CommonCls.User_session])).Username;
-            new IdeaDao().InsertNewIdea(model);
+            int ideaId = new IdeaDao().InsertNewIdea(model);
+            string url = Url.Action("UpdateIdeaById", "Idea", new { area = "Admin", ideaId = ideaId }, Request.Url.Scheme);
+            string linkCheck = "<a href=" + url + ">" + url + "</a>";
+
+            if (ideaId != 0)
+            {
+                var emailRc = (ConfigurationManager.AppSettings["ToEmailDisplayName"]);
+                MailMessage m = new MailMessage(
+                             new MailAddress(ConfigurationManager.AppSettings["FromEmailAddress"]),
+                             new MailAddress(ConfigurationManager.AppSettings["ToEmailAddress"]));
+                m.Subject = "New idea posted";
+                m.Body = string.Format("Dear {0}<BR/>New idea posted, please click on the below link to:<BR/> <a href=\"{1}\" title=\"User Email Confirm\">See</a>", emailRc, Url.Action("UpdateIdeaById", "Idea", new { Area = "QAManager", ideaId = ideaId }, Request.Url.Scheme));
+
+                m.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                smtp.Credentials = new NetworkCredential(
+                    ConfigurationManager.AppSettings["mailAccount"],
+                    ConfigurationManager.AppSettings["mailPassword"]
+                    );
+                smtp.EnableSsl = true;
+                smtp.Send(m);
+            };
 
             return RedirectToAction("PostIdea");
         }
+        // MINH / SHOW COMMENT DEFENT ON ROLE FOT STUDENT/ STUDENT
+        public void GetCommentForStu(int ideaId)
+        {
+            var rs = new CommentDao().GetCmByIdeaIdForStu(ideaId);
+            ViewBag.ViewAllComment = rs;
+        }
+        // MINH / SHOW ALL COMMENT / STUDENT
+        public void GetCmByIdeaId(int ideaId)
+        {
+            var rs = new CommentDao().GetCmByIdeaId(ideaId);
+            ViewBag.ViewAllComment = rs;
+        }
+        // MINH / CHECK SHOW COMMENT/ STUDENT
+        public void CheckShowCmByRole(int ideaId)
+        {
+
+            Account roleUser = (new AccountDao().GetUserByID(((UserLogin)(Session[ModelPr.CommonClass.CommonCls.User_session])).UserID));
+            if (roleUser.Role.Equals("STU"))
+            {
+                GetCommentForStu(ideaId);
+            }
+            else
+            {
+                GetCmByIdeaId(ideaId);
+            }
+        }
+
     }
 }

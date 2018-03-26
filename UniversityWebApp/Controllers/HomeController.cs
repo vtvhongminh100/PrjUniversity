@@ -33,7 +33,8 @@ namespace UniversityWebApp.Controllers
                         CategoryName = x.CategoryName,
                         LatestPost = (new IdeaDao().GetLastestPost(x.IdeaCategoryID).IdeaTitle).ToString(),
                         IdLatestPost = new IdeaDao().GetLastestPost(x.IdeaCategoryID).IdeaID,
-                        CountIdea = (new IdeaDao().GetAllIdeaByCateIdSt(x.IdeaCategoryID).Count())
+                        CountIdea = (new IdeaDao().GetAllIdeaByCateIdSt(x.IdeaCategoryID).Count()),
+                        CreatedBy = x.CreatedBy
                     }).ToList();
 
                 categoryIdeaView.lvIdeaCate = lvIdeaCate;
@@ -43,6 +44,29 @@ namespace UniversityWebApp.Controllers
             ViewBag.CateGr = lvIdeaCateView;
             return View();
         }
+        public ActionResult GetNewPost()
+        {
+            List<Idea> lstIdea = new IdeaDao().GetNewPost();
+            List<IdeaView> ideaViews = lstIdea.Select(x => new IdeaView
+            {
+                IdeaTitle = x.IdeaTitle,
+                IdeaID = x.IdeaID,
+                IdeaViewCount = x.IdeaViewCount,
+                CommentCount = new CommentDao().GetCmByIdeaId(x.IdeaID).Count,
+                CreatedDate = (DateTime)x.CreatedDate,
+                CreatedBy = x.CreatedBy
 
+            }).ToList();
+            return View(ideaViews);
+        }
+        public ActionResult GetHelp()
+        {
+            return View();
+        }
+        public ActionResult HelpDetail()
+        {
+            return View();
+        }
     }
+
 }

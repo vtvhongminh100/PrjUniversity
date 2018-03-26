@@ -69,5 +69,30 @@ namespace UniversityDao.Dao
             var result = db.Comments.Where(x => x.CmParentId == ideaId && x.CmStatus == true).ToList();
             return result;
         }
+        public List<Comment> GetCmByIdeaIdForStu(int ideaId)
+        {
+            var rs = (from a in db.Comments join b in db.Ideas
+                     on a.CmParentId equals b.IdeaID
+                     join c in db.Accounts on a.CreatedBy equals c.Username
+                     where (c.Role.Equals("STU") && b.IdeaID == ideaId)
+                     select new  {
+                         CmContent = a.CmContent,
+                         CmParentId = a.CmParentId,
+                         CreatedDate = a.CreatedDate,
+                         ModifiedDate = a.ModifiedDate,
+                         CreatedBy = a.CreatedBy,
+                         ModifiedBy = a.ModifiedBy
+                     }).ToList().Select(x => new Comment {
+                         CmContent = x.CmContent,
+                         CmParentId = x.CmParentId,
+                         CreatedDate = x.CreatedDate,
+                         ModifiedDate = x.ModifiedDate,
+                         CreatedBy = x.CreatedBy,
+                         ModifiedBy = x.ModifiedBy
+                     }).ToList();
+
+            return rs;
+        }
+
     }
 }

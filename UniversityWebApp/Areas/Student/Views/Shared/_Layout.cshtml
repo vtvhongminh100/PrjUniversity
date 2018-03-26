@@ -14,6 +14,12 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/CustomStyle/Css/Home/_Layout.css" rel="stylesheet" />
     <script src="~/CustomStyle/ckeditor/ckeditor.js"></script>
+
+
+    <script src="~/CustomStyle/ckfinder/help/kendo.all.min.js"></script>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.material.mobile.min.css" />
     <style>
         body {
             position: relative;
@@ -40,6 +46,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Logout","Account", new { area =""})">Log out</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="undo" href="#">Get help</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -48,8 +57,70 @@
     <div>
         @RenderBody()
     </div>
-    <div>
+    @* KENDO WINDOW *@
 
+    <div id="example" style="display:none">
+
+        <div id="window"></div>
+
+        @*<span id="undo" style="display:none" class="k-button">Click here to open the window.</span>*@
+
+        <div class="responsive-message"></div>
+        <script>
+
+            $(document).ready(function () {
+                var myWindow = $("#window"),
+                    undo = $("#undo");
+
+                function onClose() {
+                    undo.fadeIn();
+                }
+                myWindow.kendoWindow({
+                    width: "615px",
+                    title: "Help",
+                    content: "../../Home/HelpDetail",
+                    close: onClose
+                });
+                $("#window").kendoWindow({
+                    position: {
+                        top: 100, // or "100px"
+                        left: "20%"
+                    }
+                });
+                undo.click(function () {
+                    myWindow.data("kendoWindow").open();
+                    $("")
+                    //undo.fadeOut();
+                });
+
+            });
+        </script>
+
+        <style type="text/css">
+            #example {
+                min-height: 840px;
+            }
+
+            #undo {
+                /*text-align: center;
+                position: absolute;
+                white-space: nowrap;
+                border-width: 1px;
+                border-style: solid;
+                padding: 2em;
+                cursor: pointer;*/
+            }
+
+            @@media screen and (max-width: 1023px) {
+                div.k-window {
+                    display: none !important;
+                }
+            }
+
+            .k-widget k-window {
+                top: 0
+            }
+        </style>
     </div>
 </body>
 

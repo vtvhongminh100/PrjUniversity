@@ -163,6 +163,9 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\QACoordinator\Controllers\BaseController.cs" />
+    <Compile Include="Areas\QACoordinator\Controllers\IdeaController.cs" />
+    <Compile Include="Areas\QACoordinator\QACoordinatorAreaRegistration.cs" />
     <Compile Include="Areas\QAManager\Controllers\BaseController.cs" />
     <Compile Include="Areas\QAManager\Controllers\IdeaCategoryController.cs" />
     <Compile Include="Areas\QAManager\Controllers\CateGrIdeaController.cs" />
@@ -1613,6 +1616,11 @@
     <Content Include="Areas\QAManager\Views\User\Edit.cshtml" />
     <Content Include="Areas\QAManager\Views\User\Delete.cshtml" />
     <Content Include="Areas\QAManager\Views\User\Details.cshtml" />
+    <Content Include="Areas\QACoordinator\Views\web.config" />
+    <Content Include="Areas\QACoordinator\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\QACoordinator\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\QACoordinator\Views\Idea\IdeaReport.cshtml" />
+    <Content Include="Areas\QAManager\Views\Idea\GetNewPost.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -1641,9 +1649,13 @@
     <Content Include="Views\Account\Registry.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\Thanks.cshtml" />
+    <Content Include="Views\Home\GetNewPost.cshtml" />
+    <Content Include="Views\Home\GetHelp.cshtml" />
+    <Content Include="Views\Home\HelpDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\QACoordinator\Models\" />
     <Folder Include="Areas\QAManager\Models\" />
     <Folder Include="Areas\QAManager\Views\Base\" />
     <Folder Include="Areas\QAManager\Views\Category\" />

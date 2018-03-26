@@ -35,7 +35,7 @@
                                     @item.IdeaID
                                 </td>
                                 <td>
-                                    <a href="@Url.Action("Index","Idea", new { ideaId =item.IdeaID})">@item.IdeaTitle</a>
+                                    <a href="@Url.Action("Index","Idea", new { ideaId =item.IdeaID,@class="link"})">@item.IdeaTitle</a>
                                 </td>
                                 <td>
                                     @item.IdeaDescription

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.ModelViews;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace UniversityDao.Dao
         }
         public List<Idea> GetAllIdeaByCateIdSt(int cateId)
         {
-            var result = db.Ideas.Where(x => x.IdeaStatus == true && x.IdeaCategory == cateId).ToList();
+            var result = db.Ideas.Where(x => x.IdeaStatus == true && x.IdeaCategory == cateId).OrderByDescending(x => x.CreatedDate).ToList();
             return result;
         }
        
@@ -75,20 +76,21 @@ namespace UniversityDao.Dao
         }
 
         // Get only the name of category idea by that id
-        public string GetNameIdeaCate(int ideaCateId)
+        public IdeaCategory GetIdeaCateById(int ideaCateId)
         {
             try
             {
-                SqlParameter sqlParameter = new SqlParameter("@InputIdeaCategory", ideaCateId);
-                string result = db.Database.SqlQuery<String>("exec sp_getIdeaCateName @InputIdeaCategory", sqlParameter).FirstOrDefault().ToString();
-              
+                IdeaCategory result = db.IdeaCategories.Where(x => x.IdeaCategoryID == ideaCateId && x.IdeaCateStatus == true).SingleOrDefault();
+                if (result == null)
+                {
+                    return null;
+                }
                 return result;
 
             }
-            catch (Exception)
+            catch (NullReferenceException)
             {
-
-                throw;
+                return null;
             }
         }
         public string GetFileSP(int ideaId)
@@ -445,7 +447,7 @@ namespace UniversityDao.Dao
 
         // End thumbs down
         // end thumbs function
-        public bool InsertNewIdea(Idea model)
+        public int InsertNewIdea(Idea model)
         {
             try
             {
@@ -455,7 +457,7 @@ namespace UniversityDao.Dao
                 model.ClosedDate = DateTime.Now.AddDays(30);
                 db.Ideas.Add(model);
                 db.SaveChanges();
-                return true;
+                return model.IdeaID;
             }
             catch (Exception)
             {
@@ -477,7 +479,7 @@ namespace UniversityDao.Dao
                 throw;
             }
         }
-        //QAM
+        //QAM MINH
         public bool UpdateIdeaById(Idea model)
         {
             try
@@ -507,6 +509,31 @@ namespace UniversityDao.Dao
                 throw;
             }
            
+        }
+        // GET NEW POST / HOME / MINH 
+        public List<Idea> GetNewPost()
+        {
+            List<Idea> lstIdea = db.Ideas.OrderByDescending(x => x.CreatedDate).Where(x => x.IdeaStatus == true).ToList();
+            return lstIdea;
+        }
+        // GET ALALYSIS REPORT/ MINH/ IDEA COUNT
+        public List<IdeaViewCountAnalysis> GetCountReport(DateTime dateTime)
+        {
+            try
+            {
+                SqlParameter sqlParameter = new SqlParameter("@CreatedDate", dateTime);
+                List<IdeaViewCountAnalysis> result = db.Database.SqlQuery<IdeaViewCountAnalysis>("exec sp_getCountIdeaByMonth @CreatedDate", sqlParameter).ToList().Select(x => new IdeaViewCountAnalysis {
+                   IdeaTitle = x.IdeaTitle,
+                   ViewCount = x.ViewCount,
+                   CreatedDate = x.CreatedDate
+                }).ToList();
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

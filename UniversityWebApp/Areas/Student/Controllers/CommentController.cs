@@ -29,7 +29,7 @@ namespace UniversityWebApp.Areas.Student.Controllers
                 throw;
             }
         }
-
       
+
     }
 }

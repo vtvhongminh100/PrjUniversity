@@ -3,49 +3,36 @@
 <html>
 <head>
 
-    @{
-        var session = (ModelPr.ModelViews.UserLogin)Session[ModelPr.CommonClass.CommonCls.User_session];
-    }
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/CustomStyle/bootstrap-4.0.0-dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/CustomStyle/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
     <link href="~/CustomStyle/Css/Home/one-page-wonder.min.css" rel="stylesheet" />
-    <link href="~/CustomStyleCss/Login.css" rel="stylesheet" />
     <link href="~/CustomStyle/fontawsome/web-fonts-with-css/css/fontawesome-all.css" rel="stylesheet" />
-
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/CustomStyle/Css/Home/_Layout.css" rel="stylesheet" />
+    <script src="~/CustomStyle/ckeditor/ckeditor.js"></script>
+
+
     <script src="~/CustomStyle/ckfinder/help/kendo.all.min.js"></script>
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.common-material.min.css" />
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.material.min.css" />
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.material.mobile.min.css" />
     <style>
         body {
-            min-height: 100%;
-        }
-
-        html {
-            min-height: 100%;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 60px;
-            line-height: 60px;
-            background-color: #f5f5f5;
+            position: relative;
         }
     </style>
 </head>
-
-
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
-
+    @{
+        var session = (ModelPr.ModelViews.UserLogin)Session[ModelPr.CommonClass.CommonCls.User_session];
+    }
     <!-- Navigation -->
     <div class="" id="mainmenu">
-        <nav class="navbar navbar-expand-md navbar-dark navbar-custom  mainnav">
+        <nav class="navbar navbar-expand-md navbar-dark navbar-custom mainnav">
             <div class="container">
                 <a class="navbar-brand" href="@Url.Action("Index","Home", new { area =""})">FPT Greenwich University Forum</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,56 +40,24 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("PostIdea","Idea", new { area ="Student"})">Post an idea</a>
+                            <a class="nav-link" href="#">Hello: @session.Username</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("GetNewPost","Home", new { area =""})">New Idea</a>
+                            <a class="nav-link" href="@Url.Action("Logout","Account", new { area =""})">Log out</a>
                         </li>
-                        @if (session != null)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("MyProfile","Account")">Hello: @session.Username</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Logout","Account", new { area =""})">Log out</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Registry","Account", new { area =""})">Sign Up</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index","Account", new { area =""})">Log In</a>
-                            </li>
-                        }
-
                         <li class="nav-item">
                             <a class="nav-link" id="undo" href="#">Get help</a>
                         </li>
-
                     </ul>
                 </div>
             </div>
         </nav>
     </div>
     <div>
-
         @RenderBody()
-
     </div>
-    <div>
-
-    </div>
-    <footer class="footer">
-        <div class="container">
-            <span class="text-muted">Greenwich forum</span>
-        </div>
-    </footer>
     @* KENDO WINDOW *@
-
     <div id="example" style="display:none">
 
         <div id="window"></div>
@@ -121,8 +76,8 @@
                 }
                 myWindow.kendoWindow({
                     width: "615px",
-                    title: "Rams's Ten Principles of Good Design",
-                    content: "../Home/HelpDetail",
+                    title: "Help",
+                    content: "../../Home/HelpDetail",
                     close: onClose
                 });
                 $("#window").kendoWindow({
@@ -166,10 +121,6 @@
             }
         </style>
     </div>
-
-
-
-
 </body>
 
 </html>

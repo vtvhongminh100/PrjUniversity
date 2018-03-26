@@ -7,6 +7,8 @@
     var viewUser = ViewBag.ShowUserPostIdea;
     var session = (ModelPr.ModelViews.UserLogin)Session[ModelPr.CommonClass.CommonCls.User_session];
     var viewAllComment = ViewBag.ViewAllComment;
+
+
 }
 <style>
     img {
@@ -15,7 +17,12 @@
     }
 </style>
 <div class="container" style="padding-top:15px">
-
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active"><a href="@Session["Url"]">@Session["IdeaCateName"]</a> </li>
+        <li class="breadcrumb-item active">Idea</li>
+       
+    </ol>
     <hr />
     <div class="card">
 
@@ -31,7 +38,7 @@
                 {
 
                     <p style="text-align:left">Posted by: Anonymous,@viewIdea.CreatedDate </p>
-                } 
+                }
                 else
                 {
                     <p style="text-align:left">Posted by: @viewUser.Username,@viewIdea.CreatedDate </p>
@@ -178,7 +185,7 @@
                  $.ajax({
                     type: 'post',
                     contentType: 'application/json',
-                    url: '/Student/Idea/GetCmByIdeaId?ideaId=' + @viewIdea.IdeaID,
+                    url: '/Student/Idea/CheckShowCmByRole?ideaId=' + @viewIdea.IdeaID,
                     success: function (data) {
 
                     }

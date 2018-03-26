@@ -6,29 +6,26 @@ using System.Web;
 using System.Web.Mvc;
 using UniversityDao.EF;
 
-namespace UniversityWebApp.Controllers
+namespace UniversityWebApp.Areas.QACoordinator.Controllers
 {
     public class BaseController : Controller
     {
-        // GET: Base
+        // GET: Student/Base
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             UniversityDbContext db = new UniversityDbContext();
             var session = ((UserLogin)Session[ModelPr.CommonClass.CommonCls.User_session]);
             if (session == null)
             {
+                filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { Controller = "Account", action = "Index", Area = "" }));
 
             }
             else if (session != null)
             {
                 var userRole = db.Accounts.Find(session.UserID).Role;
-                if (userRole.Equals("QAM"))
+                if (!userRole.Equals("QAC"))
                 {
-                    filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { Controller = "CateGrIdea", action = "Index", Area = "QAManager" }));
-                }
-                else if (userRole.Equals("QAC"))
-                {
-                    filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { Controller = "Idea", action = "Index", Area = "QACoordinator" }));
+                    filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { Controller = "Account", action = "Index", Area = "" }));
                 }
             }
             base.OnActionExecuting(filterContext);

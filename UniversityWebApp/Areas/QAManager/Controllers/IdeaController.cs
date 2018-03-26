@@ -7,10 +7,11 @@ using System.Web;
 using System.Web.Mvc;
 using UniversityDao.Dao;
 using UniversityDao.EF;
+using UniversityWebApp.Models;
 
 namespace UniversityWebApp.Areas.QAManager.Controllers
 {
-    public class IdeaController : Controller
+    public class IdeaController : BaseController
     {
         // GET: QAManager/Idea
         public ActionResult Index(int idCateId)
@@ -27,7 +28,7 @@ namespace UniversityWebApp.Areas.QAManager.Controllers
         }
         public void GetNameIdeaCate(int ideaCateId)
         {
-            ViewBag.IdeaCateName = new IdeaDao().GetNameIdeaCate(ideaCateId);
+            ViewBag.IdeaCateName = new IdeaDao().GetIdeaCateById(ideaCateId).CategoryName.ToString();
         }
 
         public bool RemoveIdeaById(int ideaId)
@@ -57,6 +58,28 @@ namespace UniversityWebApp.Areas.QAManager.Controllers
             }
             new IdeaDao().UpdateIdeaById(idea);
             return RedirectToAction("Index/",new { idCateId = idea.IdeaCategory });
+        }
+
+        public ActionResult ViewReport()
+        {
+
+            return View();
+        }
+
+        public ActionResult GetNewPost()
+        {
+            List<Idea> lstIdea = new IdeaDao().GetNewPost();
+            List<IdeaView> ideaViews = lstIdea.Select(x => new IdeaView
+            {
+                IdeaTitle = x.IdeaTitle,
+                IdeaID = x.IdeaID,
+                IdeaViewCount = x.IdeaViewCount,
+                CommentCount = new CommentDao().GetCmByIdeaId(x.IdeaID).Count,
+                CreatedDate = (DateTime)x.CreatedDate,
+                CreatedBy = x.CreatedBy
+
+            }).ToList();
+            return View(ideaViews);
         }
     }
 }
