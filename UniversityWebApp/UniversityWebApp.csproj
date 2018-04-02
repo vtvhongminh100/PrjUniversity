@@ -165,11 +165,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\QACoordinator\Controllers\BaseController.cs" />
     <Compile Include="Areas\QACoordinator\Controllers\IdeaController.cs" />
+    <Compile Include="Areas\QACoordinator\Controllers\QACController.cs" />
     <Compile Include="Areas\QACoordinator\QACoordinatorAreaRegistration.cs" />
     <Compile Include="Areas\QAManager\Controllers\BaseController.cs" />
     <Compile Include="Areas\QAManager\Controllers\IdeaCategoryController.cs" />
     <Compile Include="Areas\QAManager\Controllers\CateGrIdeaController.cs" />
     <Compile Include="Areas\QAManager\Controllers\IdeaController.cs" />
+    <Compile Include="Areas\QAManager\Controllers\ProfileController.cs" />
     <Compile Include="Areas\QAManager\Controllers\UserController.cs" />
     <Compile Include="Areas\QAManager\QAManagerAreaRegistration.cs" />
     <Compile Include="Areas\Student\Controllers\BaseController.cs" />
@@ -1621,6 +1623,8 @@
     <Content Include="Areas\QACoordinator\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\QACoordinator\Views\Idea\IdeaReport.cshtml" />
     <Content Include="Areas\QAManager\Views\Idea\GetNewPost.cshtml" />
+    <Content Include="Areas\QAManager\Views\Profile\Index.cshtml" />
+    <Content Include="Areas\QACoordinator\Views\Profile\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

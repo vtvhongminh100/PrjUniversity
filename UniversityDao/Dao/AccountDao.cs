@@ -129,11 +129,12 @@ namespace UniversityDao.Dao
                 db.SaveChanges();
                 return true;
             }
-            catch
+            catch (Exception e)
             {
-
+                Console.Write(e.Message);
+                return false;
             }
-            return false;
+         
         }
 
         public bool UploadImage(int id, String file) {
